@@ -1,89 +1,107 @@
-import java.util.Random;
+public class Djoni {
 
-public class Djoni
-{
+    private static int TIME = 0;
+
     public static void main(String[] args) {
-        Cat cat1 = new Cat("Barsik");
-        Cat cat2 = new Cat("Pushok");
 
-        Dog dog1 = new Dog("Bobik");
-        Dog dog2 = new Dog("Sharik");
+        Cat[] cat = new Cat[3];
+        cat[0] = new Cat("Сарделька", 150, 3);
+        cat[1] = new Cat("Василий", 100, 4);
+        cat[2] = new Cat("Пушок", 30, 1);
+        Plate plate = new Plate(700);
+        System.out.println("Привет! У Вас есть три кота: " + cat[0].getName() + ", " + cat[1].getName() + " и " + cat[2].getName() + ", которые хотят есть каждые " + cat[0].getSatietyTime() + ", " + cat[1].getSatietyTime() + " и " + cat[2].getSatietyTime() + " час(а) соответственно.");
+        System.out.println("Кто-то из них более прожорлив, кто-то менее. Сейчас в миске " + plate.getFood() + " грамм кошачьего корма. Посмотрим насколько его хватит, в данный момент коты очень голодны и направляются трапезничать.\n");
 
-        cat1.info();
-        cat2.info();
+        do {
+            for (Cat i : cat) {
 
-        System.out.println();
+                //если кот голоден
+                if (i.getSatiety() == 0) {
 
-        dog1.info();
-        dog2.info();
+                    //если в миске не хватает еды, чтобы накормить кота, она будет добавлена
+                    if (!plate.checkFood(i.getAppetite())) {
+                        plate.increaseFood();
+                    }
 
-        System.out.println();
+                    //кот ест
+                    i.eat(plate);
+                    System.out.println("Кот " + i.getName() + " съел " + i.getAppetite() + " граммов корма и проголодается через " + (i.getSatiety()) + " часа(ов)");
+                }
 
-        dog1.run(400);
-        dog1.swim(5);
-        dog1.jump(0.3);
+                //декрементация показателя сытости
+                i.setSatiety(i.getSatiety() - 1);
+            }
+            System.out.println("\nС момента начала кормежки прошел(ло) " + TIME + " час(а). В миске осталось " + plate.getFood() + " граммов корма.\n");
+            TIME++;
 
-        System.out.println();
+        } while (TIME <= 24);
+    }
+}
 
-        cat1.run(1700);
-        cat1.swim(5);
-        cat1.jump(1.7);
+class Plate {
+
+    private int food;
+
+    int getFood() {
+        return food;
     }
 
-    public static class Animals {//super class
-        protected String name;
-        protected String type;
-        protected int maxRun;
-        protected int maxSwim;
-        protected double maxJump;
-        public Random random = new Random();
-
-        public Animals(String name){
-            this.name = name; // при создании объекта нужно ввести имя
-        }
-
-        public void run(int dist) { // выводит инфо об объекте относительно действия
-            if (this.maxRun >= dist) System.out.println(this.type + " " + this.name + " run " + dist + " m.");
-            else System.out.println(this.type + " " + this.name + " can't run so far.");
-        }
-
-        public void swim(int dist) {// выводит инфо об объекте относительно действия
-            if (this.maxSwim >= dist) System.out.println(this.type + " " + this.name + " swim " + dist + " m.");
-            else System.out.println(this.type + " " + this.name + " can't swim so far.");
-        }
-
-        public void jump(double height) {// выводит инфо об объекте относительно действия
-            if (this.maxJump >= height)
-                System.out.println(this.type + " " + this.name + " jump " + height + " m.");
-            else System.out.println(this.type + " " + this.name + " can't jump so hi.");
-        }
-
-        public void info() { // выводит сведения об объекте в разрезе дейсвтий
-            System.out.println(this.type + " " + this.name + " Run: " + this.maxRun + " m., Swim: " + this.maxSwim + " m., Jump: " + this.maxJump + " m.");
-        }
+    Plate(int food) {
+        this.food = food;
     }
 
-    public static class Cat extends Animals {//наследующий класс
-        public Cat(String name) {
-            super(name);// наследуюемый признак
-            this.maxJump = 2.0;
-            this.maxRun = random.nextInt(45) + 155;
-            this.type = "Cat";
-        }
-
-        @Override
-        public void swim(int dist) {
-            System.out.println("Cat's no swim!");
-        }
+    void decreaseFood(int n) {
+        food -= n;
     }
 
-    public static class Dog extends Animals {//наследующий класс
-        public Dog(String name) {
-            super(name);
-            this.type = "Dog";
-            this.maxRun = random.nextInt(300) + 300;
-            this.maxSwim = random.nextInt(6) + 5;
-            this.maxJump = Math.random() * 0.7 + 0.1;
-        }
+    void increaseFood() {
+        this.food += 400;
+        System.out.println("В миску добавили 400 грамм корма");
+    }
+
+    boolean checkFood(int n) {
+        return (food - n) >= 0;
+    }
+
+}
+
+class Cat {
+
+    private String name;
+    private int appetite;
+    private int satietyTime;
+    private int satiety;
+
+    String getName() {
+        return name;
+    }
+
+    int getAppetite() {
+        return appetite;
+    }
+
+    int getSatietyTime() {
+        return satietyTime;
+    }
+
+    int getSatiety() {
+        return satiety;
+    }
+
+    void setSatiety(int satiety) {
+        this.satiety = satiety;
+    }
+
+    Cat(String name, int appetite, int satietyTime) {
+
+        this.name = name;
+        this.appetite = appetite;
+        this.satietyTime = satietyTime;
+        this.satiety = 0;
+    }
+
+    void eat(Plate p) {
+        p.decreaseFood(appetite);
+        satiety += satietyTime;
     }
 }
