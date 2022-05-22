@@ -1,122 +1,44 @@
-import java.util.Random;
-import java.util.Scanner;
 public class Djoni {
-    public static int SIZE = 3;
-    public static int DOTS_TO_WIN = 3;
-    public static final char DOT_EMPTY = '•';
-    public static final char DOT_X = 'X';
-    public static final char DOT_O = 'O';
-    public static char[][] map;
-    public static Scanner sc = new Scanner(System.in);
-    public static Random rand = new Random();
-
     public static void main(String[] args) {
-        initMap();
-        printMap();
-        while (true) {
-            humanTurn();
-            printMap();
-            if (checkWin(DOT_X)) {
-                System.out.println("Победил человек");
-                break;
-            }
-            if (isMapFull()) {
-                System.out.println("Ничья");
-                break;
-            }
-            aiTurn();
-            printMap();
-            if (checkWin(DOT_O)) {
-                System.out.println("Победил Искуственный Интеллект");
-                break;
-            }
-            if (isMapFull()) {
-                System.out.println("Ничья");
-                break;
-            }
-        }
-        System.out.println("Игра закончена");
+        Employee[] empCorp = new Employee[5];
+        empCorp[0] = new Employee("Ivanov Ivan", "Engineer", "ivivan@mailbox.com", "892312312",50000,41);
+        empCorp[1] = new Employee("Petrov Petr", "Creator", "petrov@mailbox.com", "892312314",50000,32);
+        empCorp[2] = new Employee("Sidorov Sidr", "Water pot", "sidorov@mailbox.com", "892312315",10000,43);
+        empCorp[3] = new Employee("Pupkina Nadegda", "EnvelopeLicker", "pupkina@mailbox.com", "892312316",5000,18);
+        empCorp[4] = new Employee("Juk J", "GrinderPencil", "juk@mailbox.com", "892312317",3000,21);
+        for (Employee employee : empCorp)
+            if (employee.getAge()>40)
+                System.out.println(employee);
+
     }
+}
+class Employee {
+    private String name;
+    private String position;
+    private String email;
+    private String phone;
+    private int salary;
+    private int age;
 
-    public static boolean checkWin(char symb) {
-        if (map[0][0] == symb && map[0][1] == symb && map[0][2] == symb) return
-                true;
-        if (map[1][0] == symb && map[1][1] == symb && map[1][2] == symb) return
-                true;
-        if (map[2][0] == symb && map[2][1] == symb && map[2][2] == symb) return
-                true;
-        if (map[0][0] == symb && map[1][0] == symb && map[2][0] == symb) return
-                true;
-        if (map[0][1] == symb && map[1][1] == symb && map[2][1] == symb) return
-                true;
-        if (map[0][2] == symb && map[1][2] == symb && map[2][2] == symb) return
-                true;
-        if (map[0][0] == symb && map[1][1] == symb && map[2][2] == symb) return
-                true;
-        if (map[2][0] == symb && map[1][1] == symb && map[0][2] == symb) return
-                true;
-        return false;
+    public Employee(String name, String position, String email, String phone, int salary, int age) {
+        this.name = name;
+        this.position = position;
+        this.email = email;
+        this.phone = phone;
+        this.salary = salary;
+        this.age = age;
     }
-
-    public static boolean isMapFull() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (map[i][j] == DOT_EMPTY) return false;
-            }
-        }
-        return true;
+    public int getAge() {
+        return age;
     }
-
-    public static void aiTurn() {
-        int x, y;
-        do {
-            x = rand.nextInt(SIZE);
-            y = rand.nextInt(SIZE);
-        } while (!isCellValid(x, y));
-        System.out.println("Компьютер походил в точку " + (x + 1) + " " + (y +
-                1));
-        map[y][x] = DOT_O;
-    }
-
-    public static void humanTurn() {
-        int x, y;
-        do {
-            System.out.println("Введите координаты в формате X Y");
-            x = sc.nextInt() - 1;
-            y = sc.nextInt() - 1;
-        } while (!isCellValid(x, y)); // while(isCellValid(x, y) == false)
-        map[y][x] = DOT_X;
-    }
-
-    public static boolean isCellValid(int x, int y) {
-        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) return false;
-        if (map[y][x] == DOT_EMPTY) return true;
-        return false;
-    }
-
-    public static void initMap() {
-        map = new char[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                map[i][j] = DOT_EMPTY;
-            }
-        }
-    }
-
-    public static void printMap() {
-        for (int i = 0; i <= SIZE; i++) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
-        for (int i = 0; i < SIZE; i++) {
-            System.out.print((i + 1) + " ");
-            for (int j = 0; j < SIZE; j++) {
-                System.out.print(map[i][j] + " ");
-            }
-            System.out.println();
-        }
-
-        System.out.println();
+    @Override
+    public String toString(){
+        return(name+ "\n-"
+                +position+ "\n-"
+                +email+ "\n-"
+                +phone+ "\n-"
+                +salary+ "\n-"
+                +age);
     }
 }
 
